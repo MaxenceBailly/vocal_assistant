@@ -7,6 +7,7 @@ import time
 import random
 
 #mes imports
+from talk import talk
 from txt import *
 
 #variables
@@ -21,18 +22,6 @@ voices = engine.getProperty("voices")
 engine.setProperty("voice", voices[1].id)
 newVoiceRate = 130
 engine.setProperty('rate',newVoiceRate)
-
-def talk(text):
-    """talk function
-
-    Args:
-        text (string): text to say
-    """
-
-    print(f"--> {text}")
-    engine.say(text)
-    engine.runAndWait()
-    last_said = text
 
 def aquisition():
     """loop recognizer function
