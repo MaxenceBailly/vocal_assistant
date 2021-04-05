@@ -6,7 +6,8 @@ if platform.system() == 'Windows':
     import pyttsx3
 else:
     from gtts import gTTS
-    import pyglet
+    from playsound import playsound
+    # import pyglet
 
 def talk(text):
     """talk function
@@ -26,12 +27,12 @@ def talk(text):
         tts = gTTS(text=text, lang='en')
         filename = '/tmp/temp.mp3'
         tts.save(filename)
-        
-        sleep(1)
-        music = pyglet.media.load(filename, streaming=False)
-        music.play()
 
-        sleep(music.duration) #prevent from killing
+        playsound(filename)
+        # music = pyglet.media.load(filename, streaming=False)
+        # music.play()
+
+        # sleep(music.duration) #prevent from killing
         os.remove(filename) #remove temperory file
 
 talk("hello")
