@@ -26,7 +26,8 @@ def talk(text):
         tts = gTTS(text=text, lang='en')
         filename = '/tmp/temp.mp3'
         tts.save(filename)
-
+        
+        sleep(1)
         music = pyglet.media.load(filename, streaming=False)
         music.play()
 
