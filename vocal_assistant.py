@@ -1,7 +1,12 @@
+#!/usr/local/bin/python3.8
+
 #imports
+import platform
 import pyaudio
 import speech_recognition as sr
-import pyttsx3
+if platform.system() == 'Windows':
+    import pyttsx3
+
 import datetime
 import os
 import time
@@ -18,12 +23,12 @@ file_name = ""
 last_said = ""
 
 #definition de la voix
-listener = sr.Recognizer()
-engine = pyttsx3.init()
-voices = engine.getProperty("voices")
-engine.setProperty("voice", voices[1].id)
-newVoiceRate = 130
-engine.setProperty('rate',newVoiceRate)
+# listener = sr.Recognizer()
+# engine = pyttsx3.init()
+# voices = engine.getProperty("voices")
+# engine.setProperty("voice", voices[1].id)
+# newVoiceRate = 130
+# engine.setProperty('rate',newVoiceRate)
 
 def aquisition():
     """loop recognizer function
@@ -33,12 +38,18 @@ def aquisition():
     """
 
     command = ''
+    listener = sr.Recognizer()
+    if platform.system() == 'Windows':
+        mic = sr.Microphone()
+    else:
+        mic = sr.Microphone(device_index=microphone_index)
+
     while name not in command:
         command = ''
-        with sr.Microphone() as source:
-            listener.adjust_for_ambient_noise(source, duration=0.2)
-            listener.energy_threshold = 2000
-            print("Listening...", str(listener.energy_threshold))
+        with mic as source:
+            listener.adjust_for_ambient_noise(source , duration=0.2)
+            # listener.energy_threshold = 2000
+            print("Listening...") #, str(listener.energy_threshold))
             try:
                 voice = listener.listen(source, timeout=5.0)
                 command = listener.recognize_google(voice)
@@ -176,6 +187,13 @@ def path(command_path):
         pass
 
 #main()
+if platform.system() == 'Windows':
+    print("windows platform detected. No need to choose an microphone.")
+else:
+    for index, name in enumerate(sr.Microphone.list_microphone_names()):
+        print("{0} - {1}".format(index, name))
+    microphone_index = int(input("Please, select a microphone: "))
+
 talk("I am ready to listen")
 while True:
     ma_command = aquisition()
