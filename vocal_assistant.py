@@ -6,6 +6,16 @@ import pyaudio
 import speech_recognition as sr
 if platform.system() == 'Windows':
     import pyttsx3
+else :
+    import RPi.GPIO as GPIO
+    jaune = int(17)
+    verte = int(18)
+    bleue = int(27)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    GPIO.setup(vert, GPIO.OUT)
+    GPIO.setup(jaune, GPIO.OUT)
+    GPIO.setup(bleue, GPIO.OUT)
 
 import datetime
 import os
@@ -42,7 +52,13 @@ def aquisition():
             listener.energy_threshold = 2000
             print("----------\nJ'écoute...") #, str(listener.energy_threshold))
             try:
+                if platform.system() != 'Windows':
+                    GPIO.output(verte, GPIO.HIGH)
+                    GPIO.output(jaune, GPIO.LOW)
                 voice = listener.listen(source, timeout=5.0)
+                if platform.system() != 'Windows':
+                    GPIO.output(verte, GPIO.LOW)
+                    GPIO.output(jaune, GPIO.HIGH)
                 print("stop")
                 command = listener.recognize_google(voice, language="fr-FR")
             except:
