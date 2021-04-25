@@ -8,7 +8,7 @@ if platform.system() == 'Windows':
 else :
     import RPi.GPIO as GPIO
     jaune = int(17)
-    vert = int(18)
+    verte = int(18)
     bleue = int(27)
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)

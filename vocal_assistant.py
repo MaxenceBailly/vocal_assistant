@@ -13,7 +13,7 @@ else :
     bleue = int(27)
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
-    GPIO.setup(vert, GPIO.OUT)
+    GPIO.setup(verte, GPIO.OUT)
     GPIO.setup(jaune, GPIO.OUT)
     GPIO.setup(bleue, GPIO.OUT)
 
@@ -28,7 +28,7 @@ from txt import *
 from remind import *
 
 #variables
-name = "sarah"
+va_keyword = "sarah"
 file_name = ""
 
 def aquisition():
@@ -45,31 +45,34 @@ def aquisition():
     else:
         mic = sr.Microphone(device_index=microphone_index)
 
-    while name not in command:
+    while va_keyword not in command:
         command = ''
         with mic as source:
             listener.adjust_for_ambient_noise(source , duration=0.2)
-            listener.energy_threshold = 2000
+            if platform.system() == 'Windows': 
+                listener.energy_threshold = 2000
+
             print("----------\nJ'écoute...") #, str(listener.energy_threshold))
             try:
                 if platform.system() != 'Windows':
                     GPIO.output(verte, GPIO.HIGH)
                     GPIO.output(jaune, GPIO.LOW)
+
                 voice = listener.listen(source, timeout=5.0)
+
                 if platform.system() != 'Windows':
                     GPIO.output(verte, GPIO.LOW)
                     GPIO.output(jaune, GPIO.HIGH)
                 print("stop")
                 command = listener.recognize_google(voice, language="fr-FR")
             except:
-                voice = ""
-                command = ""
+                print(f"Vous n'avez rien dit")
+            else:
+                time.sleep(0.5)
+                print(f"Vous avez dit : {command}")
+                command = command.lower()
 
-        time.sleep(0.5)
-        print(f"Vous avez dit : {command}")
-        command = command.lower()
-
-    command = command.replace(name + " ", '')
+    command = command.replace(va_keyword + " ", '')
     return command
 
 def test():
@@ -111,7 +114,7 @@ def other(command):
     """
 
     if 'tu es stupide' in command:
-        other_command(["Oui c'est vraie", 'Oui maître je suis un robot stupide', 'Ouai comme toi'])
+        other_command(["Oui c'est vraie", "Oui maître je suis un robot stupide", "Ouais comme toi"])
  
     elif "veux-tu m'épouser" in command:
         other_command(["Si j'ai bien compris la question...Non", 'Hum...Non'])
@@ -129,7 +132,7 @@ def other(command):
         other_command(["C'est moi chérie", "Toi, une petite amie ? Ah ah laisse moi rire", "Personne t'es tout seul"])
     
     elif any(test in command for test in ["qui est tu"]):
-        other_command([(f"Je suis {name}"), (f"Je m'appelle {name}"), (f"Sérieusement !? Je suis {name}, votre assistant personnel, et le meilleur au monde")])
+        other_command([(f"Je suis {va_keyword}"), (f"Je m'appelle {va_keyword}"), (f"Sérieusement !? Je suis {va_keyword}, votre assistant personnel, et le meilleur au monde")])
 
     elif any(test in command for test in ["c'est pas gentil"]):
         other_command(["Pourquoi je devrais être gentille avec vous ?", "Je ne te respecte pas"])
@@ -187,9 +190,10 @@ def path(command_path):
 if platform.system() == 'Windows':
     print("windows détecté.")
 else:
-    for index, name in enumerate(sr.Microphone.list_microphone_names()):
-        print("{0} - {1}".format(index, name))
-    microphone_index = int(input("Veuillez choisir un microphone : "))
+    for index, device_name in enumerate(sr.Microphone.list_microphone_names()):
+        print("{0} - {1}".format(index, device_name))
+    print(f"Veuillez choisir un microphone : ")
+    microphone_index = int(input())
 
 talk("Je suis prête")
 while True:
