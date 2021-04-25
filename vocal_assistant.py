@@ -83,28 +83,45 @@ def time_now():
     talk(f"Il est {time}")
 
 def open_app(command_path):
-    if 'minecraft launcher' in command_path:
-        talk("I open Minecraft Launcher")
-        os.startfile("C:/Program Files (x86)/Minecraft Launcher/MinecraftLauncher.exe")
-        
-    elif "assassin's creed chronicles china" in command_path:
-        talk("I open Assassin's Creed chronicles china")
-        os.startfile("uplay://launch/1651/0")
-    
-    elif 'discord' in command_path:
-        talk("I open Discord")
-        os.startfile("C:/Users/maxen/AppData/Local/Discord/app-0.0.308/Discord.exe")
-    
-    elif 'ubisoft' in command_path:
-        talk("I open Ubsoft Connect")
-        os.startfile("C:/Program Files (x86)/Ubisoft/Ubisoft Game Launcher/UbisoftConnect.exe")
-    
-    elif 'file' in command_path:
-        file_name = command_path.replace("friday open file ", "")
-        open_file(file_name)
+    open_phrase = "J'ouvre"
 
+    if platform.system() == 'Windows':
+
+        if 'minecraft launcher' in command_path:
+            talk(f"{open_phrase} Minecraft Launcher")
+            os.startfile("C:/Program Files (x86)/Minecraft Launcher/MinecraftLauncher.exe")
+            
+        elif "assassin's creed chronicles china" in command_path:
+            talk(f"{open_phrase} Assassin's Creed chronicles china")
+            os.startfile("uplay://launch/1651/0")
+        
+        elif 'discord' in command_path:
+            talk(f"{open_phrase} Discord")
+            os.startfile("C:/Users/maxen/AppData/Local/Discord/app-0.0.308/Discord.exe")
+        
+        elif 'ubisoft' in command_path:
+            talk(f"{open_phrase} Ubsoft Connect")
+            os.startfile("C:/Program Files (x86)/Ubisoft/Ubisoft Game Launcher/UbisoftConnect.exe")
+        
+        elif 'file' in command_path:
+            file_name = command_path.replace("sarah ouvre le fichier ", "")
+            open_file(file_name)
+
+        else:
+            talk(f"I don't understand your open request, repeat please")
+    
     else:
-        talk("I don't understand your open request, repeat please")
+        if 'yeux' in command_path:
+            talk(f"{open_phrase} les yeux")
+            os.system('xeyes &')
+        
+        elif 'calculatrice' in command_path:
+            talk(f"{open_phrase} la calculatrice")
+            os.system('xcalc &')
+        
+        elif 'terminal' in command_path:
+            talk(f"{open_phrase} un terminal")
+            os.system('lxterminal')
 
 def other(command):
     """other function
