@@ -15,14 +15,15 @@ def talk(text):
     if platform.system() == 'Windows':
         engine = pyttsx3.init()
         voices = engine.getProperty("voices")
-        engine.setProperty("voice", voices[1].id)
+        engine.setProperty("voice", voices[0].id)
         newVoiceRate = 130
-        engine.setProperty('rate',newVoiceRate)
+        engine.setProperty('rate', newVoiceRate)
         engine.say(text)
         engine.runAndWait()
     else:
         command = os.path.abspath(os.getcwd()) + "/speech.sh " + text
         os.system(command)
 
+
 if __name__ == "__main__":
-    talk("hello")
+    talk("Bonjour tout le monde")

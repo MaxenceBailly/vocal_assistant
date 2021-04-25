@@ -18,17 +18,8 @@ from txt import *
 from remind import *
 
 #variables
-name = "friday"
+name = "sarah"
 file_name = ""
-last_said = ""
-
-#definition de la voix
-# listener = sr.Recognizer()
-# engine = pyttsx3.init()
-# voices = engine.getProperty("voices")
-# engine.setProperty("voice", voices[1].id)
-# newVoiceRate = 130
-# engine.setProperty('rate',newVoiceRate)
 
 def aquisition():
     """loop recognizer function
@@ -48,28 +39,29 @@ def aquisition():
         command = ''
         with mic as source:
             listener.adjust_for_ambient_noise(source , duration=0.2)
-            # listener.energy_threshold = 2000
-            print("Listening...") #, str(listener.energy_threshold))
+            listener.energy_threshold = 2000
+            print("----------\nJ'écoute...") #, str(listener.energy_threshold))
             try:
                 voice = listener.listen(source, timeout=5.0)
-                command = listener.recognize_google(voice)
+                print("stop")
+                command = listener.recognize_google(voice, language="fr-FR")
             except:
                 voice = ""
                 command = ""
 
         time.sleep(0.5)
-        print(f"You said : {command}")
+        print(f"Vous avez dit : {command}")
         command = command.lower()
 
     command = command.replace(name + " ", '')
     return command
 
 def test():
-    talk("This is the test function")
+    talk("C'est une fonction test")
 
 def time_now():
     time = datetime.datetime.now().strftime('%H:%M')
-    talk(f"It is {time}")
+    talk(f"Il est {time}")
 
 def open_app(command_path):
     if 'minecraft launcher' in command_path:
@@ -95,9 +87,6 @@ def open_app(command_path):
     else:
         talk("I don't understand your open request, repeat please")
 
-def command():
-    print("All comand : time, open")
-
 def other(command):
     """other function
 
@@ -105,29 +94,29 @@ def other(command):
         command (string): the text to recognize contain
     """
 
-    if 'you are stupid' in command:
-        other_command(['Yes is true', 'Yes master i am a stupid bot', 'Yeah like you'])
+    if 'tu es stupide' in command:
+        other_command(["Oui c'est vraie", 'Oui maître je suis un robot stupide', 'Ouai comme toi'])
  
-    elif 'do you marry me' in command:
-        other_command(['If i really understand the question...No', 'Hum...No'])
+    elif "veux-tu m'épouser" in command:
+        other_command(["Si j'ai bien compris la question...Non", 'Hum...Non'])
     
-    elif any(test in command for test in ["do you love me", "do you like me"]):
-        other_command(["I don't know", "Who are you actually ?", "Yes but a little"])
+    elif any(test in command for test in ["m'aime tu", "est-ce que tu m'aime"]):
+        other_command(["Je sais pas", "Tu es qui déjà ?", "Oui mais juste un peu"])
     
-    elif 'how are you' in command:
-        other_command(["Yeah i am fine with you", " I feel so sad, i haven't any friend in my stupid bot life"])
+    elif 'comment vas-tu' in command:
+        other_command(["Ouai je suis bien avec toi", "Je me sens triste, j'ai aucun ami dans ma stupide vie de robot"])
     
-    elif any(test in command for test in ["hi ", "hello"]):
-        other_command(["Hi master", "Hi", "Hello", "Hello master", "Hello, is it me you're looking for ?", "Hello from the outside"])
+    elif any(test in command for test in ["salut", "bonjour"]):
+        other_command(["Bonjour maître", "Salut", "Bonjour"]) #, "Hello, is it me you're looking for ?", "Hello from the outside"])
     
-    elif 'who is my girlfriend' in command:
-        other_command(["It's me darling", "You, a girlfriend ? Ah ah let me laught", "Nobody you are alone"])
+    elif 'qui est ma petite amie' in command:
+        other_command(["C'est moi chérie", "Toi, une petite amie ? Ah ah laisse moi rire", "Personne t'es tout seul"])
     
-    elif any(test in command for test in ["who are you"]):
-        other_command([(f"I am {name}"), (f"I am {name}"), (f"Seriously !? I am {name}, your personnal assistant, and the best of the world")])
+    elif any(test in command for test in ["qui est tu"]):
+        other_command([(f"Je suis {name}"), (f"Je m'appelle {name}"), (f"Sérieusement !? Je suis {name}, votre assistant personnel, et le meilleur au monde")])
 
-    elif any(test in command for test in ["that's not kind", "that is not kind"]):
-        other_command(["Why must i be kind with you ?", "I just don't respect you"])
+    elif any(test in command for test in ["c'est pas gentil"]):
+        other_command(["Pourquoi je devrais être gentille avec vous ?", "Je ne te respecte pas"])
 
 def other_command(list):
     """function other command wich return a sentence of list
@@ -149,38 +138,30 @@ def path(command_path):
 
     if command_path != "":
         other(command_path)
-    if 'open' in command_path:
+    if 'ouvre' in command_path:
         open_app(command_path)
 
-    elif 'time' in command_path:
+    elif 'heure' in command_path:
         time_now()
 
     elif 'test' in command_path:
         test()
-    
-    elif 'command' in command_path:
-        command()
 
-    elif 'close file' in command_path:
+    elif 'ferme le fichier' in command_path:
         close_file(file_name)
     
-    elif 'read file' in command_path:
+    elif 'lie le fichier' in command_path:
         read_file(file_name)
     
-    elif 'create file' in command_path:
-        command_path = command_path.replace("create ", "")
-        command_path = command_path.replace("file ", "") 
+    elif 'crée le fichier' in command_path:
+        command_path = command_path.replace("crée le fichier ", "")
         create_file(command_path)
     
-    elif 'repeat' in command_path:
-        print(last_said)
-        talk(last_said)
-    
-    elif 'remind' in command_path:
+    elif 'rappelle' in command_path:
         remind(command_path)
 
-    elif any(test in command_path for test in ['exit', 'stop', 'turning off', 'goodbye', 'shut up']):
-        other_command(['Goodbye', 'Goodbye master', 'See you later'])
+    elif any(test in command_path for test in ['au revoir', 'stop']):
+        other_command(['Au revoir', 'Au revoir maître', 'À la prochaine'])
         quit()
 
     else:
@@ -188,13 +169,13 @@ def path(command_path):
 
 #main()
 if platform.system() == 'Windows':
-    print("windows platform detected. No need to choose an microphone.")
+    print("windows détecté.")
 else:
     for index, name in enumerate(sr.Microphone.list_microphone_names()):
         print("{0} - {1}".format(index, name))
-    microphone_index = int(input("Please, select a microphone: "))
+    microphone_index = int(input("Veuillez choisir un microphone : "))
 
-talk("I am ready to listen")
+talk("Je suis prête")
 while True:
     ma_command = aquisition()
     path(ma_command)
