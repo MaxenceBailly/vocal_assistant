@@ -28,16 +28,19 @@ from txt import *
 from remind import *
 
 #variables
-va_keyword = "sarah"
-file_name = ""
+va_keyword = 'sarah'
+file_name = ''
+
+def talk_multi(text):
+    print(f"{va_keyword} : {text}")
+    if platform.system() == 'Windows':
+        talk(text)
+    else:
+        GPIO.output(bleue, GPIO.HIGH)
+        talk(text)
+        GPIO.output(bleue, GPIO.LOW)
 
 def aquisition():
-    """loop recognizer function
-
-    Returns:
-        string: returned string
-    """
-
     command = ''
     listener = sr.Recognizer()
     if platform.system() == 'Windows':
@@ -52,7 +55,7 @@ def aquisition():
             if platform.system() == 'Windows': 
                 listener.energy_threshold = 2000
 
-            print("----------\nJ'écoute...") #, str(listener.energy_threshold))
+            print('----------\nJ\'écoute...') #, str(listener.energy_threshold))
             try:
                 if platform.system() != 'Windows':
                     GPIO.output(verte, GPIO.HIGH)
@@ -63,117 +66,100 @@ def aquisition():
                 if platform.system() != 'Windows':
                     GPIO.output(verte, GPIO.LOW)
                     GPIO.output(jaune, GPIO.HIGH)
-                print("stop")
-                command = listener.recognize_google(voice, language="fr-FR")
+                print('stop')
+                command = listener.recognize_google(voice, language='fr-FR')
             except:
-                print(f"Vous n'avez rien dit")
+                print('Vous n\'avez rien dit')
             else:
                 time.sleep(0.5)
                 print(f"Vous avez dit : {command}")
                 command = command.lower()
 
-    command = command.replace(va_keyword + " ", '')
+    command = command.replace(va_keyword + ' ', '')
     return command
 
 def test():
-    talk("C'est une fonction test")
+    talk_multi('C\'est une fonction test')
 
 def time_now():
     time = datetime.datetime.now().strftime('%H:%M')
-    talk(f"Il est {time}")
+    talk_multi(f"Il est {time}")
 
 def open_app(command_path):
-    open_phrase = "J'ouvre"
+    open_phrase = 'J\'ouvre'
 
     if platform.system() == 'Windows':
 
         if 'minecraft launcher' in command_path:
-            talk(f"{open_phrase} Minecraft Launcher")
-            os.startfile("C:/Program Files (x86)/Minecraft Launcher/MinecraftLauncher.exe")
+            talk_multi(f"{open_phrase} Minecraft Launcher")
+            os.startfile('C:/Program Files (x86)/Minecraft Launcher/MinecraftLauncher.exe')
             
-        elif "assassin's creed chronicles china" in command_path:
-            talk(f"{open_phrase} Assassin's Creed chronicles china")
-            os.startfile("uplay://launch/1651/0")
+        elif 'assassin\'s creed chronicles china' in command_path:
+            talk_multi(f"{open_phrase} Assassin's Creed chronicles china")
+            os.startfile('uplay://launch/1651/0')
         
         elif 'discord' in command_path:
-            talk(f"{open_phrase} Discord")
-            os.startfile("C:/Users/maxen/AppData/Local/Discord/app-0.0.308/Discord.exe")
+            talk_multi(f"{open_phrase} Discord")
+            os.startfile('C:/Users/maxen/AppData/Local/Discord/app-0.0.308/Discord.exe')
         
         elif 'ubisoft' in command_path:
-            talk(f"{open_phrase} Ubsoft Connect")
-            os.startfile("C:/Program Files (x86)/Ubisoft/Ubisoft Game Launcher/UbisoftConnect.exe")
+            talk_multi(f"{open_phrase} Ubsoft Connect")
+            os.startfile('C:/Program Files (x86)/Ubisoft/Ubisoft Game Launcher/UbisoftConnect.exe')
         
         elif 'file' in command_path:
-            file_name = command_path.replace("sarah ouvre le fichier ", "")
+            file_name = command_path.replace('sarah ouvre le fichier ', '')
             open_file(file_name)
 
         else:
-            talk(f"I don't understand your open request, repeat please")
+            talk_multi('Je ne comprend pas, veuillez répéter')
     
     else:
         if 'yeux' in command_path:
-            talk(f"{open_phrase} les yeux")
+            talk_multi(f"{open_phrase} les yeux")
             os.system('xeyes &')
         
         elif 'calculatrice' in command_path:
-            talk(f"{open_phrase} la calculatrice")
+            talk_multi(f"{open_phrase} la calculatrice")
             os.system('xcalc &')
         
         elif 'terminal' in command_path:
-            talk(f"{open_phrase} un terminal")
+            talk_multi(f"{open_phrase} un terminal")
             os.system('lxterminal')
 
 def other(command):
-    """other function
-
-    Args:
-        command (string): the text to recognize contain
-    """
-
     if 'tu es stupide' in command:
-        other_command(["Oui c'est vraie", "Oui maître je suis un robot stupide", "Ouais comme toi"])
+        other_command(['Oui c\'est vrai', 'Oui maître je suis un robot stupide', 'Ouais comme toi'])
  
-    elif "veux-tu m'épouser" in command:
-        other_command(["Si j'ai bien compris la question...Non", 'Hum...Non'])
+    elif 'veux-tu m\'épouser' in command:
+        other_command(['Si j\'ai bien compris la question...Non', 'Hum...Non'])
     
-    elif any(test in command for test in ["m'aime tu", "est-ce que tu m'aime"]):
-        other_command(["Je sais pas", "Tu es qui déjà ?", "Oui mais juste un peu"])
+    elif any(test in command for test in ['m\'aime tu', 'est-ce que tu m\'aime']):
+        other_command(['Je sais pas', 'Tu es qui déjà ?', 'Oui mais juste un peu'])
     
     elif 'comment vas-tu' in command:
-        other_command(["Ouai je suis bien avec toi", "Je me sens triste, j'ai aucun ami dans ma stupide vie de robot"])
+        other_command(['Ouai je suis bien avec toi', 'Je me sens triste, j\'ai aucun ami dans ma stupide vie de robot'])
     
-    elif any(test in command for test in ["salut", "bonjour"]):
-        other_command(["Bonjour maître", "Salut", "Bonjour"]) #, "Hello, is it me you're looking for ?", "Hello from the outside"])
+    elif any(test in command for test in ['salut', 'bonjour']):
+        other_command(['Bonjour maître', 'Salut', 'Bonjour']) #, "Hello, is it me you're looking for ?", "Hello from the outside"])
     
     elif 'qui est ma petite amie' in command:
-        other_command(["C'est moi chérie", "Toi, une petite amie ? Ah ah laisse moi rire", "Personne t'es tout seul"])
+        other_command(['C\'est moi chérie', 'Toi, une petite amie ? Ah ah laisse moi rire', 'Personne t\'es tout seul'])
     
-    elif any(test in command for test in ["qui est tu"]):
+    elif any(test in command for test in ['qui est tu']):
         other_command([(f"Je suis {va_keyword}"), (f"Je m'appelle {va_keyword}"), (f"Sérieusement !? Je suis {va_keyword}, votre assistant personnel, et le meilleur au monde")])
 
-    elif any(test in command for test in ["c'est pas gentil"]):
-        other_command(["Pourquoi je devrais être gentille avec vous ?", "Je ne te respecte pas"])
+    elif any(test in command for test in ['c\'est pas gentil']):
+        other_command(['Pourquoi je devrais être gentille avec vous ?', 'Je ne te respecte pas'])
 
 def other_command(list):
-    """function other command wich return a sentence of list
-
-    Args:
-        list (list): list of sentence to choice randomly
-    """
-
     len_list = len(list)
     random_number = random.randint(0, (len_list-1))
-    talk(list[random_number])
+    talk_multi(list[random_number])
 
 def path(command_path):
-    """function path to execute every command
-
-    Args:
-        command_path (string): text to analyzing
-    """
-
-    if command_path != "":
+    if command_path != '':
         other(command_path)
+
     if 'ouvre' in command_path:
         open_app(command_path)
 
@@ -190,7 +176,7 @@ def path(command_path):
         read_file(file_name)
     
     elif 'crée le fichier' in command_path:
-        command_path = command_path.replace("crée le fichier ", "")
+        command_path = command_path.replace('crée le fichier ', '')
         create_file(command_path)
     
     elif 'rappelle' in command_path:
@@ -205,14 +191,14 @@ def path(command_path):
 
 #main()
 if platform.system() == 'Windows':
-    print("windows détecté.")
+    print('windows détecté.')
 else:
     for index, device_name in enumerate(sr.Microphone.list_microphone_names()):
-        print("{0} - {1}".format(index, device_name))
-    print(f"Veuillez choisir un microphone : ")
+        print(f"{index} - {device_name}")
+    print('Veuillez choisir un microphone : ')
     microphone_index = int(input())
 
-talk("Je suis prête")
+talk_multi('Je suis prête')
 while True:
     ma_command = aquisition()
     path(ma_command)
