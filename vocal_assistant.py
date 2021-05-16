@@ -123,7 +123,7 @@ def open_app(command_path):
         
         elif 'diagramme' in command_path:
             talk_multi(f"{open_phrase} votre diagramme")
-            os.system("/usr/bin/gpicview assistant_vocal.png")
+            os.system("/usr/bin/gpicview assistant_vocal.png &")
 
 def other(command):
     if 'tu es stupide' in command:
