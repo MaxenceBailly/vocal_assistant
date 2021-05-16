@@ -26,7 +26,7 @@ from txt import *
 from remind import *
 
 #variables
-va_keyword = 'sarah'
+va_keyword = 'clara'
 file_name = ''
 
 def talk_multi(text):
@@ -49,9 +49,8 @@ def aquisition():
     while va_keyword not in command:
         command = ''
         with mic as source:
-            listener.adjust_for_ambient_noise(source , duration=0.2)
-            if platform.system() == 'Windows': 
-                listener.energy_threshold = 2000
+            listener.adjust_for_ambient_noise(source , duration=0.2) 
+            listener.energy_threshold = 2000
 
             print('----------\nJ\'écoute...') #, str(listener.energy_threshold))
             try:
@@ -121,6 +120,10 @@ def open_app(command_path):
         elif 'terminal' in command_path:
             talk_multi(f"{open_phrase} un terminal")
             os.system('lxterminal')
+        
+        elif 'diagramme' in command_path:
+            talk_multi(f"{open_phrase} votre diagramme")
+            os.system("/usr/bin/gpicview assistant_vocal.png")
 
 def other(command):
     if 'tu es stupide' in command:
