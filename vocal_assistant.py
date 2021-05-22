@@ -144,7 +144,7 @@ def other(command):
     elif 'qui est ma petite amie' in command:
         other_command(['C\'est moi chérie', 'Toi, une petite amie ? Ah ah laisse moi rire', 'Personne t\'es tout seul'])
     
-    elif any(test in command for test in ['qui est tu']):
+    elif any(test in command for test in ['qui es-tu']):
         other_command([(f"Je suis {va_keyword}"), (f"Je m'appelle {va_keyword}"), (f"Sérieusement !? Je suis {va_keyword}, votre assistant personnel, et le meilleur au monde")])
 
     elif any(test in command for test in ['c\'est pas gentil']):

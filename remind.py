@@ -1,12 +1,12 @@
-import time
+import time, multiprocessing
 from talk import talk
 
 def remind(text):
     chaine = text
-    chaine = chaine.replace("remind me to ", "")
+    chaine = chaine.replace("rappelle-moi de ", "")
     chaine = chaine.split()
     copy_chaine = text
-    copy_chaine = copy_chaine.replace("remind me to ", "")
+    copy_chaine = copy_chaine.replace("rappelle-moi de ", "")
     copy_chaine = copy_chaine.split()
     long = len(chaine)
 
@@ -18,7 +18,7 @@ def remind(text):
     inverser = long - 1
     pos_in = 0
     while pos_in == 0:
-        if chaine[inverser] == "in":
+        if chaine[inverser] == "dans":
             pos_in = inverser
             a = long - pos_in
             for i in range(a):
@@ -26,7 +26,6 @@ def remind(text):
             remind = copy_chaine
             for i in range(pos_in+1):
                 chaine.pop(0)
-                print(chaine)
             
 
             i = len(chaine)
@@ -34,15 +33,15 @@ def remind(text):
             while i != 0:
                 if chaine[i] == "minutes":
                     minute = chaine[i-1]
-                if chaine[i] == "hours":
+                if chaine[i] == "heures":
                     hour = chaine[i-1]
-                if chaine[i] == "seconds":
+                if chaine[i] == "secondes":
                     second = chaine[i-1]
                 if chaine[i] == "minute":
                     minute = chaine[i-1]
-                if chaine[i] == "hour":
+                if chaine[i] == "heure":
                     hour = chaine[i-1]
-                if chaine[i] == "second":
+                if chaine[i] == "seconde":
                     second = chaine[i-1]
                 i -= 1
         inverser -= 1
@@ -53,10 +52,16 @@ def remind(text):
     hour *= 3600
     second = int(second)
     total_time = minute + second + hour
-    print(total_time)
-#!!!a changer car bloque le code
-    time.sleep(total_time)
 
     final_remind = ', '.join(remind)
     final_remind = final_remind.replace(',', '')
-    talk(f"remind, {final_remind}")
+    remind_process = multiprocessing.Process(target=wait, args=[total_time, final_remind])
+    remind_process.start()
+    remind_process.join()
+
+def wait(time_to_wait, remind):
+    time.sleep(time_to_wait )
+    talk(f"rappelle, {remind}")
+
+if __name__ == "__main__":
+    remind("rappelle-moi de démarer le programme dans 10 secondes")
