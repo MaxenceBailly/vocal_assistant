@@ -22,11 +22,19 @@ import random
 
 #mes imports
 from talk import *
-from txt import *
+#from txt import *
 from remind import *
+import yaml
+
+#config management
+with open("config.yml", "r") as ymlfile:
+    cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
+
+with open(cfg["speech_to_text"]["local"]+'.yml', 'r') as langyml:
+        file = yaml.load(langyml, Loader=yaml.FullLoader)
 
 #variables
-va_keyword = 'clara'
+va_keyword = cfg["bot"]["name"].lower()
 file_name = ''
 
 def talk_multi(text):
@@ -49,20 +57,20 @@ def aquisition():
     while va_keyword not in command:
         command = ''
         with mic as source:
-            listener.adjust_for_ambient_noise(source , duration=0.2) 
-            listener.energy_threshold = 2000
+            listener.adjust_for_ambient_noise(source , duration=cfg["speech_to_text"]["ambient_noise"]) 
+            listener.energy_threshold = cfg["speech_to_text"]["energy_threshold"]
 
             print('----------\nJ\'écoute...') #, str(listener.energy_threshold))
             try:
                 if platform.system() != 'Windows':
                     GPIO.output(verte, GPIO.HIGH)
 
-                voice = listener.listen(source, timeout=5.0)
+                voice = listener.listen(source, timeout=cfg["speech_to_text"]["time_out"])
 
                 if platform.system() != 'Windows':
                     GPIO.output(verte, GPIO.LOW)
                 print('stop')
-                command = listener.recognize_google(voice, language='fr-FR')
+                command = listener.recognize_google(voice, language=cfg["speech_to_text"]["local"])
             except:
                 print('Vous n\'avez rien dit')
             else:
@@ -188,6 +196,19 @@ def path(command_path):
     else:
         pass
 
+def function(command):
+    long_command = len(file["command"])
+    list_of_command = []
+    for all_commands in file:
+        print(file["command"][all_commands])
+
+    for i in range(long_command):
+
+        print(file["command"][i]["keyword"])
+        if any(test in file["command"][i]["keyword"] for test in command):
+            pass
+
+
 #main()
 if platform.system() == 'Windows':
     print('windows détecté.')
@@ -197,6 +218,7 @@ else:
     print('Veuillez choisir un microphone : ')
     microphone_index = int(input())
 
+function("Bonjour")
 talk_multi('Je suis prête')
 while True:
     ma_command = aquisition()

@@ -1,0 +1,16 @@
+command:
+  - name_of_the_command:
+      keyword:
+        - Bonjour
+        - Salut
+      action:
+        talk:
+          - Salut le débile
+          - Bonjour
+  
+  - test:
+      keyword:
+        - test
+      action:
+        talk:
+          - C'est une fonction test
