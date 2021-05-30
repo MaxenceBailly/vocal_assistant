@@ -4,16 +4,7 @@
 import platform
 import pyaudio
 import speech_recognition as sr
-if platform.system() == 'Windows':
-    import pyttsx3
-else :
-    import RPi.GPIO as GPIO
-    verte = int(18)
-    bleue = int(27)
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
-    GPIO.setup(verte, GPIO.OUT)
-    GPIO.setup(bleue, GPIO.OUT)
+import pyttsx3
 
 import datetime
 import os
@@ -22,8 +13,6 @@ import random
 
 #mes imports
 from talk import *
-from txt import *
-from remind import *
 
 #variables
 va_keyword = 'clara'
@@ -31,12 +20,7 @@ file_name = ''
 
 def talk_multi(text):
     print(f"{va_keyword} : {text}")
-    if platform.system() == 'Windows':
-        talk(text)
-    else:
-        GPIO.output(bleue, GPIO.HIGH)
-        talk(text)
-        GPIO.output(bleue, GPIO.LOW)
+    talk(text)
 
 def aquisition():
     command = ''
@@ -54,13 +38,7 @@ def aquisition():
 
             print('----------\nJ\'écoute...') #, str(listener.energy_threshold))
             try:
-                if platform.system() != 'Windows':
-                    GPIO.output(verte, GPIO.HIGH)
-
                 voice = listener.listen(source, timeout=5.0)
-
-                if platform.system() != 'Windows':
-                    GPIO.output(verte, GPIO.LOW)
                 print('stop')
                 command = listener.recognize_google(voice, language='fr-FR')
             except:
@@ -83,48 +61,29 @@ def time_now():
 def open_app(command_path):
     open_phrase = 'J\'ouvre'
 
-    if platform.system() == 'Windows':
-
-        if 'minecraft launcher' in command_path:
-            talk_multi(f"{open_phrase} Minecraft Launcher")
-            os.startfile('C:/Program Files (x86)/Minecraft Launcher/MinecraftLauncher.exe')
-            
-        elif 'assassin\'s creed chronicles china' in command_path:
-            talk_multi(f"{open_phrase} Assassin's Creed chronicles china")
-            os.startfile('uplay://launch/1651/0')
+    if 'minecraft launcher' in command_path:
+        talk_multi(f"{open_phrase} Minecraft Launcher")
+        os.startfile('C:/Program Files (x86)/Minecraft Launcher/MinecraftLauncher.exe')
         
-        elif 'discord' in command_path:
-            talk_multi(f"{open_phrase} Discord")
-            os.startfile('C:/Users/maxen/AppData/Local/Discord/app-0.0.308/Discord.exe')
-        
-        elif 'ubisoft' in command_path:
-            talk_multi(f"{open_phrase} Ubsoft Connect")
-            os.startfile('C:/Program Files (x86)/Ubisoft/Ubisoft Game Launcher/UbisoftConnect.exe')
-        
-        elif 'file' in command_path:
-            file_name = command_path.replace('sarah ouvre le fichier ', '')
-            open_file(file_name)
-
-        else:
-            talk_multi('Je ne comprend pas, veuillez répéter')
+    elif 'assassin\'s creed chronicles china' in command_path:
+        talk_multi(f"{open_phrase} Assassin's Creed chronicles china")
+        os.startfile('uplay://launch/1651/0')
     
-    else:
-        if 'yeux' in command_path:
+    elif 'discord' in command_path:
+        talk_multi(f"{open_phrase} Discord")
+        os.startfile('C:/Users/maxen/AppData/Local/Discord/app-0.0.308/Discord.exe')
+    
+    elif 'ubisoft' in command_path:
+        talk_multi(f"{open_phrase} Ubsoft Connect")
+        os.startfile('C:/Program Files (x86)/Ubisoft/Ubisoft Game Launcher/UbisoftConnect.exe')
+    
+    elif 'yeux' in command_path:
             talk_multi(f"{open_phrase} les yeux")
-            os.system('xeyes &')
-        
-        elif 'calculatrice' in command_path:
-            talk_multi(f"{open_phrase} la calculatrice")
-            os.system('xcalc &')
-        
-        elif 'terminal' in command_path:
-            talk_multi(f"{open_phrase} un terminal")
-            os.system('lxterminal')
-        
-        elif 'diagramme' in command_path:
-            talk_multi(f"{open_phrase} votre diagramme")
-            os.system("/usr/bin/gpicview assistant_vocal.png &")
+            os.startfile('wineyes.exe')
 
+    else:
+        talk_multi('Je ne comprend pas, veuillez répéter')
+    
 def other(command):
     if 'tu es stupide' in command:
         other_command(['Oui c\'est vrai', 'Oui maître je suis un robot stupide', 'Ouais comme toi'])
@@ -167,19 +126,6 @@ def path(command_path):
 
     elif 'test' in command_path:
         test()
-
-    elif 'ferme le fichier' in command_path:
-        close_file(file_name)
-    
-    elif 'lie le fichier' in command_path:
-        read_file(file_name)
-    
-    elif 'crée le fichier' in command_path:
-        command_path = command_path.replace('crée le fichier ', '')
-        create_file(command_path)
-    
-    elif 'rappelle' in command_path:
-        remind(command_path)
 
     elif any(test in command_path for test in ['au revoir', 'stop']):
         other_command(['Au revoir', 'Au revoir maître', 'À la prochaine'])
