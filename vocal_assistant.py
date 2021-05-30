@@ -22,8 +22,8 @@ import random
 
 #mes imports
 from talk import *
-from txt import *
-from remind import *
+#from txt import *
+#from remind import *
 
 #variables
 va_keyword = 'clara'
