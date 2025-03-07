@@ -1,4 +1,4 @@
-# vocal_assistant
+# Vocal assistant
 
 ## Description
 
